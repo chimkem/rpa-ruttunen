@@ -2,6 +2,8 @@ import os
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
+# from commands.kide import kideresult
+from commands.slashes import test, moikkaa
 
 # Load env variables from .env since we want them to be secret
 load_dotenv()
@@ -12,17 +14,12 @@ SERVERID = int(os.getenv('SERVERID'))
 intents = discord.Intents.default()
 intents.message_content = True
 intents.messages = True
-bot = commands.Bot(command_prefix="!", intents=intents)
+bot = commands.Bot(command_prefix="/", intents=intents)
 
 @bot.event
-# Start the bot, print output
 async def on_ready():
-    # Convert SERVERID to int
-    guild = discord.Object(id=int(SERVERID))
-    # Sync commands to our server to see updates faster
-    await bot.tree.sync(guild=guild)
-    # Print output
-    print(f'Started {bot.user}, under the name {bot.user.name}')
+    await bot.tree.sync()  # Sync the command tree
+    print(f"{bot.user.name} has connected to {SERVERID}")
 
 @bot.event
 # React to a specific message
@@ -35,9 +32,17 @@ async def on_message(message):
     if message.content == "botbot":
         await message.reply("🐔Häpi Winks🍗")
 
-# Slash command to test the bot
-@bot.tree.command(name="ping", description="test the bot")
-async def ping(interaction: discord.Interaction):
-    await interaction.response.send_message("Jep, toimii!")
+def register_command(name: str, description: str, func):
+    @bot.tree.command(name=name, description=description)
+    async def command(interaction: discord.Interaction):
+        # Call the provided function
+        await func(interaction)
+    return command
+
+# V -- SLASH COMMAND LIST -- V
+
+# Register the commands
+register_command("moikka", "Moikkaa bottia", moikkaa)
+register_command("test", "Test the bot", test)
 
 bot.run(TOKEN)
