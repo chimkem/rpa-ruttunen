@@ -30,18 +30,18 @@ options.add_argument("--start-maximized")
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
     # 👀 Comment when in production. Test serach query, un-comment for dev purposes.
-search_query = {
+"""search_query = {
     "search_phrase": "approt",
     "location": "everywhere"
 }
-
+"""
 
 
 
 
 
 # MAIN FUNCTION 💯
-def seach_from_kide_app(search_phrase, location="everywhere"):
+def seach_from_kide_app(search_phrase, location):
 
     # Open website
     driver.get("https://kide.app/")
@@ -119,7 +119,7 @@ def seach_from_kide_app(search_phrase, location="everywhere"):
         array_for_events.append(event_info)
 
 # 👀 Comment when in production. Running function for test/dev purposes.
-seach_from_kide_app(search_query["search_phrase"], search_query["location"])
+#seach_from_kide_app(search_query["search_phrase"], search_query["location"])
 
 
 # Export module here? I don't know about exports in python 😂
