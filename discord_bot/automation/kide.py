@@ -6,7 +6,6 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.keys import Keys
 # Wait for the cookie consent button to be present (optional but recommended)
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -20,9 +19,9 @@ options.add_experimental_option("detach", True)
 options.add_argument("--start-maximized")
 
   # 👀 Un-comment when in production. To use selenium wihtout actualy opening the window
-# options.add_argument("--headless")
-# options.add_argument("--no-sandbox")
-# options.add_argument("--disable-dev-shm-usage")
+options.add_argument("--headless")
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
 
 
 
@@ -41,7 +40,7 @@ driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), opti
 
 
 # MAIN FUNCTION 💯
-def seach_from_kide_app(search_phrase, location):
+def seach_from_kide_app(search_phrase):
 
     # Open website
     driver.get("https://kide.app/")
@@ -90,9 +89,8 @@ def seach_from_kide_app(search_phrase, location):
         event_info["event_price"] = price_cleaned
 
         array_for_events.append(event_info)
-        print(array_for_events)
+        #print(array_for_events)
         return
-    
 
     for i in range(1, results_array_length):
         # If i > 5, the loop has run 5 times, exit by returning the array
@@ -123,7 +121,6 @@ def seach_from_kide_app(search_phrase, location):
 
 
 # Export module here? I don't know about exports in python 😂
-
 
 
 

@@ -5,8 +5,8 @@ from discord.ext import commands
 from dotenv import load_dotenv
 from commands.slashes import test, moikkaa
 from commands.embed_campus import log_campus, embed_campus
-from commands.embed_kide import log_kide#, embed_kide
-#from automation.kide import seach_from_kide_app
+from commands.embed_kide import log_kide, embed_kide
+from automation.kide import seach_from_kide_app#, embed_kide
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 """
     - INTENTS AND VARIABLES -
@@ -60,24 +60,23 @@ async def on_message(message):
 """
 @bot.tree.command(name='haku_kide', description='Hae tapahtumia')
 @app_commands.describe(
-    haku='Hae tapahtumaa nimellä // Esim. Approt',
-    paikkakunta='Anna paikkakunta (valinnainen) // Esim. Helsinki'
+    haku='Hae kaikkia Suomen opiskelijatapahtumia nimellä // Esim. Approt',
     )
 
 async def haku_kide(
     interaction: discord.Interaction, 
     haku: str,
-    paikkakunta: str = "everywhere",
 ):
     # Let the bot think
     await interaction.response.defer()
 
     if haku: 
         # VV uncomment when automation returns the values VV
-        #kide_automation_results = seach_from_kide_app(search_phrase=haku, location=paikkakunta)
-        
+        kide_automation_results = seach_from_kide_app(haku)
+        await embed_kide(interaction, kide_automation_results)
+        #print(kide_automation_results)
         #await embed_kide(interaction, kide_automation_results)
-        await log_kide(interaction, paikkakunta, haku)
+        await log_kide(interaction, haku)
     else:
         await interaction.followup.send("Ilmoita tapahtuman tyyppi, kiitos. // Esim. Approt")
 
