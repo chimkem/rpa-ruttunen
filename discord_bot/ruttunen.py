@@ -5,7 +5,7 @@ from discord.ext import commands
 from dotenv import load_dotenv
 from commands.slashes import test, moikkaa
 from commands.embed_campus import log_campus, embed_campus
-from commands.embed_kide import log_kide, embed_kide
+from commands.embed_kide import log_kide#, embed_kide
 #from automation.kide import seach_from_kide_app
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 """
@@ -45,13 +45,13 @@ async def on_message(message):
 
     # Only one user can use sync command
     if message.content == "sync":
-        if message.author.id == JID:
-            await bot.tree.sync()
-            print("Sync Used!")
-            await message.reply("◕‿↼ Synkissä!")
-        else:
+        #if message.author.id == JID:
+        await bot.tree.sync()
+        print("Sync Used!")
+        await message.reply("◕‿↼ Synkissä!")
+        """else:
             await message.reply("Tottelen vaan tyttöjä 🙄")
-            print("Sync Tried!")
+            print("Sync Tried!")"""
     else:
         return
 
@@ -73,8 +73,10 @@ async def haku_kide(
     await interaction.response.defer()
 
     if haku: 
-        #await seach_from_kide_app(search_phrase=haku, location=paikkakunta)
-        await embed_kide(interaction, paikkakunta, haku)
+        # VV uncomment when automation returns the values VV
+        #kide_automation_results = seach_from_kide_app(search_phrase=haku, location=paikkakunta)
+        
+        #await embed_kide(interaction, kide_automation_results)
         await log_kide(interaction, paikkakunta, haku)
     else:
         await interaction.followup.send("Ilmoita tapahtuman tyyppi, kiitos. // Esim. Approt")
