@@ -1,9 +1,6 @@
 import discord
 
-async def log_kide(interaction: discord.Interaction, 
-                   haku:str,
-                   paikkakunta:str
-                   ):
+async def log_kide(interaction: discord.Interaction, haku:str,):
     print(f"Kide search used!")
     embed = discord.Embed(
             title="Kide.App - LOG",
@@ -13,7 +10,6 @@ async def log_kide(interaction: discord.Interaction,
     embed.add_field(name="", value = (
             "**Haku toteutettu seuraavilla kriteereillä:**\n"
             f"Tapahtuman tyyppi: {haku}\n"
-            f"Paikkakunta: {paikkakunta}"
         ), inline=False)
     
     user = interaction.user
@@ -30,7 +26,7 @@ async def log_kide(interaction: discord.Interaction,
         print("Log channel not found.")
 
 async def embed_kide(interaction,
-                     event_info
+                     array_for_events
                     ):
     embed = discord.Embed(
             title="Kide.App",
@@ -41,19 +37,17 @@ async def embed_kide(interaction,
     embed.set_thumbnail(url="https://play-lh.googleusercontent.com/f_CZ_ZEoAH38iz8WozWC3HkElLPaS3G-0jcDi0NktnsJOklduGpueIwnCjS08aiZeGQ")
     embed.set_image(url="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fkide.app%2Fcontent%2Fimages%2Fthemes%2Fkide%2Fapplication%2Fdefault.jpg&f=1&nofb=1&ipt=e956d2044b4a18a1a0e3897c3bfaad6e05e37a692b2fd3add132e3cf2eb2f466&ipo=images")
 
-    for event in event_info:
+    for event in array_for_events:
         kidename = event["event_name"]
         kidelocation = event["event_location"]
         kideprice = event["event_price"]
 
         # Add text to the embed
-        embed.add_field(name=kidename, value = (
-            #"Milloin:\n"
-            #"12.12.2023\n\n"
-            "Missä:\n"
-            f"{kidelocation}\n\n"
-            "Lipun hinta:\n"
-            f"`{kideprice}`"
+        embed.add_field(name=f"**{kidename}**", value = (
+            "> Milloin ja missä:\n"
+            f"> ➥ `{kidelocation}`\n"
+            "> Lipunmyynti:\n"
+            f"> ➥ `{kideprice}`\n\n"
             #"[Lisätiedot ja liput](https://discordpy.readthedocs.io/)"
         ), inline=False)
     # Set footer and current time as the timestamp
