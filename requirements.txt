@@ -19,3 +19,5 @@ webdriver-manager==4.0.2
 websocket-client==1.8.0
 wsproto==1.2.0
 discord==2.3.2
+robocorp==2.1.2
+robocorp-browser==2.3.4

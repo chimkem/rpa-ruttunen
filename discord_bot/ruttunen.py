@@ -7,6 +7,7 @@ from commands.slashes import test, moikkaa
 from commands.embed_campus import log_campus, embed_campus
 from commands.embed_kide import log_kide, embed_kide
 from automation.kide import seach_from_kide_app#, embed_kide
+from automation.campus import search_from_campusonline
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 """
     - INTENTS AND VARIABLES -
@@ -73,7 +74,7 @@ async def haku_kide(
     if haku: 
         # VV uncomment when automation returns the values VV
         kide_automation_results = seach_from_kide_app(haku)
-        await embed_kide(interaction, kide_automation_results)
+        await embed_kide(interaction, kide_automation_results, haku)
         #print(kide_automation_results)
         #await embed_kide(interaction, kide_automation_results)
         await log_kide(interaction, haku)
@@ -96,7 +97,7 @@ async def haku_kide(
         app_commands.Choice(name="Kevät", value="spring"),
         app_commands.Choice(name="Kesä", value="summer"),
         app_commands.Choice(name="Syksy", value="fall"),
-        app_commands.Choice(name="Non-Stop", value="nonstop"),
+        app_commands.Choice(name="Non-Stop", value="continous"),
     ],
     kieli=[
         app_commands.Choice(name="Suomi", value="finnish"),
@@ -142,7 +143,11 @@ async def haku_campus(interaction: discord.Interaction,
             color = blue
         else: 
             color = orange
-        await embed_campus(interaction, color)
+        
+        campus_search_results = search_from_campusonline(lukukausi, kieli, taso, ala)
+        print(campus_search_results)
+
+        #await embed_campus(interaction, campus_search_results, color)
         await log_campus(interaction, 
                            lukukausi.value, 
                            kieli.value, 

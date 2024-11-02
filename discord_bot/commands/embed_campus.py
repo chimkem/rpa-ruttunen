@@ -2,6 +2,7 @@ import discord
 
 async def embed_campus(
         interaction: discord.Interaction, 
+        courses_info,
         color: discord.Color
         ):
     print(f"Campus search used!")
@@ -13,19 +14,28 @@ async def embed_campus(
     # Add small image
     embed.set_thumbnail(url="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.savonia.fi%2Fapp%2Fuploads%2F2020%2F11%2Fcampusonline-logo.jpg&f=1&nofb=1&ipt=0283fb533a5c9c0b4e6a5f1092b6edb2536b97d8aaf3f2279026916a20e23cfe&ipo=images")
     
-    # Add text to the embed
-    embed.add_field(name="Tähän kurssin nimi", value = (
+    for course in courses_info:
+        course_institution = course["institution"]
+        course_points = course["points"]
+        course_name = course["name"]
+        course_date = course["date"]
+        course_language = course["language"]
+        course_level = course["level"]
+        course_enrollment = course["enrollment_period"]
+    
+        # Add text to the embed
+        embed.add_field(name=f"{course_name} - {course_date}", value = (
             "https://discordpy.readthedocs.io/\n\n"
             "Opintojakson kieli:\n" 
-            f"Suomi\n\n"
+            f"{course_language}\n\n"
             "Korkeakoulu:\n"
-            f"Laurea\n\n"
+            f"{course_institution}\n\n"
             "Opintopisteet:\n"
-            "16 OP\n\n"
+            f"{course_points} OP\n\n"
             "Taso:\n"
-            f"Ylä-aste\n\n"
+            f"{course_level}\n\n"
             "Ilmoittautuminen:\n"
-            "12.12.2022 - 14.05.2024\n"
+            f"{course_enrollment}\n"
             "[Ilmoittaudu kurssille](https://discordpy.readthedocs.io/)"
         ), inline=False)
 

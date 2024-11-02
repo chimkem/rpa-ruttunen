@@ -26,7 +26,8 @@ async def log_kide(interaction: discord.Interaction, haku:str,):
         print("Log channel not found.")
 
 async def embed_kide(interaction,
-                     array_for_events
+                     array_for_events,
+                     haku
                     ):
     embed = discord.Embed(
             title="Kide.App",
@@ -48,8 +49,10 @@ async def embed_kide(interaction,
             f"> ➥ `{kidelocation}`\n"
             "> Lipunmyynti:\n"
             f"> ➥ `{kideprice}`\n\n"
-            #"[Lisätiedot ja liput](https://discordpy.readthedocs.io/)"
         ), inline=False)
+    embed.add_field(name="", value= (
+        f"[Checkkaa kaikki tapahtumat täältä!](https://kide.app/search?searchText={haku})"
+    ), inline=False)
     # Set footer and current time as the timestamp
     embed.set_footer(text="Robotti Ruttunen")
     embed.timestamp = discord.utils.utcnow()
