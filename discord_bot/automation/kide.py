@@ -25,19 +25,19 @@ options.add_argument("--disable-dev-shm-usage")
 
 
 
-# Init the driver
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-
     # 👀 Comment when in production. Test serach query, un-comment for dev purposes.
-# search_query = {
-#     "search_phrase": "approt",
-#     "location": "everywhere"
-# }
+    # search_query = {
+    #     "search_phrase": "approt",
+    #     "location": "everywhere"
+    # }
+        # Open website
 
 
 # MAIN FUNCTION 💯
 def seach_from_kide_app(search_phrase):
-    # Open website
+
+        # Init the driver
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     driver.get("https://kide.app/")
 
     # Wait until the cookie accept button is visible
@@ -95,8 +95,8 @@ def seach_from_kide_app(search_phrase):
         # print(f"This is the LENGTH for array_for_events AFTER appending new event: {len(array_for_events)} \n")
 
     print(f"This is the CONTENT for array_for_events BEFORE RETURN:\n\n {array_for_events}\n")
+    driver.quit()
     return array_for_events
-
 
 # 👀 Comment when in production. Running function for test/dev purposes.
 # seach_from_kide_app(search_query["search_phrase"])

@@ -7,7 +7,7 @@ from commands.slashes import test, moikkaa
 from commands.embed_campus import log_campus, embed_campus
 from commands.embed_kide import log_kide, embed_kide
 from automation.kide import seach_from_kide_app#, embed_kide
-from automation.campus import search_from_campusonline
+#from automation.campus import search_from_campusonline
 # - - - - - - - - - - - - - - - - - - - - - - - - -
 """
     - INTENTS AND VARIABLES -
@@ -144,8 +144,8 @@ async def haku_campus(interaction: discord.Interaction,
         else: 
             color = orange
         
-        campus_search_results = search_from_campusonline(lukukausi, kieli, taso, ala)
-        print(campus_search_results)
+        #campus_search_results = search_from_campusonline(lukukausi, kieli, taso, ala)
+        #print(campus_search_results)
 
         #await embed_campus(interaction, campus_search_results, color)
         await log_campus(interaction, 
