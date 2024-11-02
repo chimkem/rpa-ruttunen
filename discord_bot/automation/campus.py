@@ -99,7 +99,8 @@ def search_from_campusonline(semester, level, language, field, number):
                     "date": course_div.find_element(By.CSS_SELECTOR, ".course-date.bold").text.strip(),
                     "language": course_div.find_element(By.XPATH, "div[span[text()='Opintojakson kieli:']]/span[2]").text.strip(),
                     "level": course_div.find_element(By.XPATH, "div[span[text()='Taso:']]/span[2]").text.strip(),
-                    "enrollment_period": course_div.find_element(By.XPATH, "div[span[text()='Ilmoittautumisaika:']]/span[2]").text.strip()
+                    "enrollment_period": course_div.find_element(By.XPATH, "div[span[text()='Ilmoittautumisaika:']]/span[2]").text.strip(),
+                    "link": course_div.find_element(By.CSS_SELECTOR, ".button black small").href()
                 }
                 courses_info.append(course_data)
                 print(f"Course data collected: {course_data}")
