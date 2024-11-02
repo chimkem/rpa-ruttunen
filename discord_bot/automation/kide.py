@@ -29,19 +29,14 @@ options.add_argument("--disable-dev-shm-usage")
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
     # 👀 Comment when in production. Test serach query, un-comment for dev purposes.
-"""search_query = {
-    "search_phrase": "approt",
-    "location": "everywhere"
-}
-"""
-
-
-
+# search_query = {
+#     "search_phrase": "approt",
+#     "location": "everywhere"
+# }
 
 
 # MAIN FUNCTION 💯
 def seach_from_kide_app(search_phrase):
-
     # Open website
     driver.get("https://kide.app/")
 
@@ -50,77 +45,62 @@ def seach_from_kide_app(search_phrase):
         EC.visibility_of_element_located((By.XPATH, "/html/body/header/o-consent/o-content/o-material/o-material__footer/button[2]"))
     )
     cookie_accept_button = driver.find_element(By.XPATH, "/html/body/header/o-consent/o-content/o-material/o-material__footer/button[2]")
-    # print(cookie_accept_button.get_attribute("innerHTML"))
     cookie_accept_button.click()
 
-    # Search field by id. un-comment Xpath version if this breaks for some reason
+    # Search field by id. Make CSS / Xpath version if this breaks for some reason
     search_field = driver.find_element(By.ID, "input-1")
     search_field.send_keys(search_phrase)
     search_field.send_keys(Keys.RETURN)
 
-# Find search results with xpath and return an array of objects.
-    #  WAit for element to appear. If no container, no search results and error is thrown.
-    WebDriverWait(driver, 10).until(
-        EC.visibility_of_element_located((By.XPATH, "/html/body/main/ui-view/o-page/o-section/o-content/o-grid[3]/div/o-grid[1]"))
-    )
+# Find search results and return an array of objects.
+    # Wait 10 seconds for element/container that contains the search results. If does not appear, no search results and return 0.
+    try:
+        WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, "/html/body/main/ui-view/o-page/o-section/o-content/o-grid[3]/div/o-grid[1]"))
+        )
+    except:
+        print("No event's were found!💀")
+        return 0        
 
-    results_array_length = len(driver.find_elements(By.XPATH, "/html/body/main/ui-view/o-page/o-section/o-content/o-grid[3]/div/o-grid[1]/div[2]/o-product-list/o-grid/*"))
-
-    # print("Results array length")
-    # print(results_array_length)
-
+    # Initialize array for events
     array_for_events = []
 
+    # Contains array of all DIV elements. They contain information for single event.
+    all_events = driver.find_elements(By.CSS_SELECTOR, "o-grid.o-margin-bottom--half-gutter:nth-child(1) > div:nth-child(2) > o-product-list:nth-child(1) > o-grid:nth-child(1) > *")
 
-    if results_array_length == 1:
-        event_name_xpath = f'/html/body/main/ui-view/o-page/o-section/o-content/o-grid[3]/div/o-grid[1]/div[2]/o-product-list/o-grid/div/o-product-card/o-card/o-card__content/div[1]'
-        event_name = driver.find_element(By.XPATH, event_name_xpath)
+    # print(f"This is the length of all_events array where ALL THE EVENT DIV'S ARE STORED: {len(all_events)} \n")
 
-        event_location_xpath = f'/html/body/main/ui-view/o-page/o-section/o-content/o-grid[3]/div/o-grid[1]/div[2]/o-product-list/o-grid/div/o-product-card/o-card/o-card__content/div[2]'
-        event_location = driver.find_element(By.XPATH, event_location_xpath)
+    for event in all_events[:5]:
+        # Relative CSS selectors for items inside each DIV (which contains single event)
+        title_selector = event.find_element(By.CSS_SELECTOR, "* > o-product-card:nth-child(1) > o-card:nth-child(1) > o-card__content:nth-child(2) > div:nth-child(1)")
+        title = title_selector.get_attribute("innerHTML")
+        # print(title)
+        time_and_place_selector = event.find_element(By.CSS_SELECTOR, "* > o-product-card:nth-child(1) > o-card:nth-child(1) > o-card__content:nth-child(2) > div:nth-child(2)")
+        time_and_place = time_and_place_selector.get_attribute("innerHTML")
+        # print(time_and_place)
+        price_selector = event.find_element(By.CSS_SELECTOR, "* > o-product-card:nth-child(1) > o-card:nth-child(1) > o-card__footer:nth-child(3) > div:nth-child(4)")
+        price = price_selector.get_attribute("innerHTML")
+        price_cleaned = price.replace("&nbsp;", "").strip()
+        # print(price)
 
-        event_price_xpath = f'/html/body/main/ui-view/o-page/o-section/o-content/o-grid[3]/div/o-grid[1]/div[2]/o-product-list/o-grid/div/o-product-card/o-card/o-card__footer/div[2]'
-        event_price = driver.find_element(By.XPATH, event_price_xpath)
-        price_cleaned = event_price.get_attribute("innerHTML").replace("&nbsp;", "").strip()
-
+        # Initialize object for event informationn
         event_info = {}
-        event_info["event_name"] = event_name.get_attribute("innerHTML")
-        event_info["event_location"] = event_location.get_attribute("innerHTML")
+        event_info["event_name"] = title
+        event_info["event_location"] = time_and_place
         event_info["event_price"] = price_cleaned
-
         array_for_events.append(event_info)
-        #print(array_for_events)
-        return
 
-    for i in range(1, results_array_length):
-        # If i > 5, the loop has run 5 times, exit by returning the array
-        if i > 5:
-            print(array_for_events)
-            return array_for_events
+        # Debugging prints for CONTENT and LENGTH of the array containen event infoamtion
+        # print(f"This is the CONTENT for array_for_events AFTER APPENDING NEW EVENT it\n {array_for_events}\n")
+        # print(f"This is the LENGTH for array_for_events AFTER appending new event: {len(array_for_events)} \n")
 
-        event_name_xpath = f'/html/body/main/ui-view/o-page/o-section/o-content/o-grid[3]/div/o-grid[1]/div[2]/o-product-list/o-grid/div[{i}]/o-product-card/o-card/o-card__content/div[1]'
-        event_name = driver.find_element(By.XPATH, event_name_xpath)
+    print(f"This is the CONTENT for array_for_events BEFORE RETURN:\n\n {array_for_events}\n")
+    return array_for_events
 
-        event_location_xpath = f'/html/body/main/ui-view/o-page/o-section/o-content/o-grid[3]/div/o-grid[1]/div[2]/o-product-list/o-grid/div[{i}]/o-product-card/o-card/o-card__content/div[2]'
-        event_location = driver.find_element(By.XPATH, event_location_xpath)
-
-        event_price_xpath = f'/html/body/main/ui-view/o-page/o-section/o-content/o-grid[3]/div/o-grid[1]/div[2]/o-product-list/o-grid/div[{i}]/o-product-card/o-card/o-card__footer/div[2]'
-        event_price = driver.find_element(By.XPATH, event_price_xpath)
-        price_cleaned = event_price.get_attribute("innerHTML").replace("&nbsp;", "").strip()
-
-        event_info = {}
-        event_info["event_name"] = event_name.get_attribute("innerHTML")
-        event_info["event_location"] = event_location.get_attribute("innerHTML")
-        event_info["event_price"] = price_cleaned
-
-
-        array_for_events.append(event_info)
 
 # 👀 Comment when in production. Running function for test/dev purposes.
-#seach_from_kide_app(search_query["search_phrase"], search_query["location"])
+# seach_from_kide_app(search_query["search_phrase"])
 
-
-# Export module here? I don't know about exports in python 😂
 
 
 
@@ -146,4 +126,27 @@ def seach_from_kide_app(search_phrase):
 # thing = driver.find_element(By.XPATH, perse)
 # print("that thangggg")
 # print(thing)
+
+
+
+
+# if results_array_length == 1:
+#     event_name_xpath = f'/html/body/main/ui-view/o-page/o-section/o-content/o-grid[3]/div/o-grid[1]/div[2]/o-product-list/o-grid/div/o-product-card/o-card/o-card__content/div[1]'
+#     event_name = driver.find_element(By.XPATH, event_name_xpath)
+
+#     event_location_xpath = f'/html/body/main/ui-view/o-page/o-section/o-content/o-grid[3]/div/o-grid[1]/div[2]/o-product-list/o-grid/div/o-product-card/o-card/o-card__content/div[2]'
+#     event_location = driver.find_element(By.XPATH, event_location_xpath)
+
+#     event_price_xpath = f'/html/body/main/ui-view/o-page/o-section/o-content/o-grid[3]/div/o-grid[1]/div[2]/o-product-list/o-grid/div/o-product-card/o-card/o-card__footer/div[2]'
+#     event_price = driver.find_element(By.XPATH, event_price_xpath)
+#     price_cleaned = event_price.get_attribute("innerHTML").replace("&nbsp;", "").strip()
+
+#     event_info = {}
+#     event_info["event_name"] = event_name.get_attribute("innerHTML")
+#     event_info["event_location"] = event_location.get_attribute("innerHTML")
+#     event_info["event_price"] = price_cleaned
+
+#     array_for_events.append(event_info)
+#     #print(array_for_events)
+#     return
 # return
