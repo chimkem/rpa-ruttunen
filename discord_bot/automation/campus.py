@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+
 def search_from_campusonline(semester, level, language, field, number):
     """
     This function navigates to the CampusOnline course page, selects filters based on input,
@@ -88,8 +89,9 @@ def search_from_campusonline(semester, level, language, field, number):
         # Find all elements with ".card-content" selector
         course_divs = driver.find_elements(By.CSS_SELECTOR, ".card-content")
         courses_info = []
+        count = len(course_divs)
         
-        if course_divs < 1:
+        if count < 1:
             return courses_info
         else:
             # Loop for populating courses_info lists
@@ -103,7 +105,7 @@ def search_from_campusonline(semester, level, language, field, number):
                         "language": course_div.find_element(By.XPATH, "div[span[text()='Opintojakson kieli:']]/span[2]").text.strip(),
                         "level": course_div.find_element(By.XPATH, "div[span[text()='Taso:']]/span[2]").text.strip(),
                         "enrollment_period": course_div.find_element(By.XPATH, "div[span[text()='Ilmoittautumisaika:']]/span[2]").text.strip(),
-                        "link": course_div.find_element(By.CSS_SELECTOR, ".button.black.small").get_attribute("href")
+                        "link": course_div.find_element(By.XPATH, "../div[@class='link']/a[@class='button black small']").get_attribute("href")
                     }
                     courses_info.append(course_data)
                     print(f"Course data collected: {course_data}")
