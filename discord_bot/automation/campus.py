@@ -32,22 +32,22 @@ def search_from_campusonline(semester, level, language, field, number):
         except Exception as e:
             print("No cookie consent dialog found or could not be clicked.")
 
-        # Click available courses
-        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#course-full"))).click()
-        print("Expanded course filters.")
-
         # Function to click checkboxes with selected filters
         def click_checkbox(selectors, selected_items):
             for index, is_selected in enumerate(selected_items):
                 if is_selected:
                     try:
                         checkbox = WebDriverWait(driver, 10).until(
-                            EC.element_to_be_clickable((By.CSS_SELECTOR, selectors[index]))
+                            EC.visibility_of_element_located((By.CSS_SELECTOR, selectors[index]))
                         )
                         checkbox.click()
                         print(f"Checkbox {selectors[index]} clicked.")
                     except Exception as e:
                         print(f"Could not click checkbox {selectors[index]}: {e}")
+        
+         # Click available courses
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#course-full"))).click()
+        print("Expanded course filters.")
 
         # Define selectors and options for filters
         semester_selectors = ["#spring", "#summer", "#fall", "#continous"]
