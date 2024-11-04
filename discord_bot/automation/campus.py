@@ -88,23 +88,27 @@ def search_from_campusonline(semester, level, language, field, number):
         # Find all elements with ".card-content" selector
         course_divs = driver.find_elements(By.CSS_SELECTOR, ".card-content")
         courses_info = []
-
-        # Loop for populating courses_info lists
-        for course_div in course_divs[:number]:
-            try:
-                course_data = {
-                    "institution": course_div.find_element(By.CSS_SELECTOR, ".campus span").text.strip(),
-                    "points": course_div.find_element(By.CSS_SELECTOR, ".points.bold").text.strip(),
-                    "name": course_div.find_element(By.TAG_NAME, "h4").text.strip(),
-                    "date": course_div.find_element(By.CSS_SELECTOR, ".course-date.bold").text.strip(),
-                    "language": course_div.find_element(By.XPATH, "div[span[text()='Opintojakson kieli:']]/span[2]").text.strip(),
-                    "level": course_div.find_element(By.XPATH, "div[span[text()='Taso:']]/span[2]").text.strip(),
-                    "enrollment_period": course_div.find_element(By.XPATH, "div[span[text()='Ilmoittautumisaika:']]/span[2]").text.strip()
-                }
-                courses_info.append(course_data)
-                print(f"Course data collected: {course_data}")
-            except Exception as e:
-                print(f"Error retrieving course data: {e}")
+        
+        if course_divs < 1:
+            return courses_info
+        else:
+            # Loop for populating courses_info lists
+            for course_div in course_divs[:number]:
+                try:
+                    course_data = {
+                        "institution": course_div.find_element(By.CSS_SELECTOR, ".campus span").text.strip(),
+                        "points": course_div.find_element(By.CSS_SELECTOR, ".points.bold").text.strip(),
+                        "name": course_div.find_element(By.TAG_NAME, "h4").text.strip(),
+                        "date": course_div.find_element(By.CSS_SELECTOR, ".course-date.bold").text.strip(),
+                        "language": course_div.find_element(By.XPATH, "div[span[text()='Opintojakson kieli:']]/span[2]").text.strip(),
+                        "level": course_div.find_element(By.XPATH, "div[span[text()='Taso:']]/span[2]").text.strip(),
+                        "enrollment_period": course_div.find_element(By.XPATH, "div[span[text()='Ilmoittautumisaika:']]/span[2]").text.strip(),
+                        "link": course_div.find_element(By.CSS_SELECTOR, ".button.black.small").get_attribute("href")
+                    }
+                    courses_info.append(course_data)
+                    print(f"Course data collected: {course_data}")
+                except Exception as e:
+                    print(f"Error retrieving course data: {e}")
 
     finally:
         # Close browser
