@@ -2,3 +2,8 @@
 
 # Ignore virtual enviroment files
 .venv/
+/discord_bot/commands/__pycache__
+discord_bot/automation/__pycache__/kide.cpython-312.pyc
+/discord_bot/automation/__pycache__
+/discord_bot/commands/__pycache__
+/discord_bot/commands/__pycache__

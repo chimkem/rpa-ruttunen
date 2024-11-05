@@ -32,7 +32,7 @@ blue = discord.Color.blue()
         
 @bot.event
 async def on_ready():
-    print(f"{bot.user.name} has connected to {SERVERID}")
+    print(f"{bot.user.name} has connected to the server ({SERVERID})")
 
 
 """
@@ -59,6 +59,7 @@ async def on_message(message):
 """
     - KIDE SEARCH FUNCTION -
 """
+# Descriptions (Shows on Discord)
 @bot.tree.command(name='haku_kide', description='Hae tapahtumia')
 @app_commands.describe(
     haku='Hae kaikkia Suomen opiskelijatapahtumia nimellä // Esim. Approt',
@@ -72,11 +73,11 @@ async def haku_kide(
     await interaction.response.defer()
 
     if haku: 
-        # VV uncomment when automation returns the values VV
+        # Search using user input
         kide_automation_results = seach_from_kide_app(haku)
-        await embed_kide(interaction, kide_automation_results)
-        #print(kide_automation_results)
-        #await embed_kide(interaction, kide_automation_results)
+        # Print the output
+        await embed_kide(interaction, kide_automation_results, haku)
+        # Log
         await log_kide(interaction, haku)
     else:
         await interaction.followup.send("Ilmoita tapahtuman tyyppi, kiitos. // Esim. Approt")
@@ -84,6 +85,7 @@ async def haku_kide(
 """
     - CAMPUSONLINE SEARCH FUNCTION -
 """
+# Descriptions (Shows on Discord)
 @bot.tree.command(name='haku_campus', description='Hae kursseja')
 @app_commands.describe(
     lukukausi='Valitse lukukausi',
@@ -93,12 +95,13 @@ async def haku_kide(
     hakumäärä='Tuo useampi hakutulos // Default: 1'
     )
 
+# Choices for the CampusOnline search
 @app_commands.choices(
     lukukausi=[
         app_commands.Choice(name="Kevät", value="spring"),
         app_commands.Choice(name="Kesä", value="summer"),
         app_commands.Choice(name="Syksy", value="fall"),
-        app_commands.Choice(name="Non-Stop", value="nonstop"),
+        app_commands.Choice(name="Non-Stop", value="continous"),
     ],
     kieli=[
         app_commands.Choice(name="Suomi", value="finnish"),
@@ -134,9 +137,11 @@ async def haku_campus(interaction: discord.Interaction,
     # Let the bot think
     await interaction.response.defer()
 
-    if lukukausi and kieli and taso and ala:
+    if hakumäärä > 10:
+        await interaction.followup.send("10 on maksimi, kiitos!")
 
-        # Change the color for the embed based on the value
+    elif lukukausi and kieli and taso and ala:
+        # Change the color for the embed based on the given value
         if lukukausi.value == "spring":
             color = yellow 
         elif lukukausi.value == "summer":
@@ -146,10 +151,13 @@ async def haku_campus(interaction: discord.Interaction,
         else: 
             color = orange
         
+        # Use the given commands to make a search
         campus_search_results = search_from_campusonline(lukukausi.value, kieli.value, taso.value, ala.value, hakumäärä)
         print(campus_search_results) 
 
+        # Output for the search
         await embed_campus(interaction, campus_search_results, color)
+        # Log
         await log_campus(interaction, 
                          lukukausi.value, 
                          kieli.value, 
@@ -170,7 +178,7 @@ def answer_command(name: str, description: str, func):
         await func(interaction)
     return command
 
-# Register the commands
+# Register the other commands
 answer_command("moikka", "Moikkaa bottia", moikkaa)
 answer_command("test", "Test the bot", test)
 
