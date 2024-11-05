@@ -31,6 +31,7 @@ async def embed_campus(
             course_language = course["language"]
             course_level = course["level"]
             course_enrollment = course["enrollment_period"]
+            course_link = course["link"]
         
             # Add text to the embed
             embed.add_field(name=f"{course_name}", value = (
@@ -46,7 +47,7 @@ async def embed_campus(
                 f"{course_level}\n\n"
                 "Ilmoittautuminen:\n"
                 f"{course_enrollment}\n"
-                "[Ilmoittaudu kurssille](https://discordpy.readthedocs.io/)"
+                f"[Ilmoittaudu kurssille]({course_link})"
             ), inline=False)
 
         # Set footer and current time as the timestamp
